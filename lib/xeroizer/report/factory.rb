@@ -1,6 +1,7 @@
 require 'xeroizer/application_http_proxy' 
 require 'xeroizer/report/base'
 require 'xeroizer/report/aged_receivables_by_contact'
+require 'xeroizer/report/ten_ninety_nine'
 
 module Xeroizer
   module Report

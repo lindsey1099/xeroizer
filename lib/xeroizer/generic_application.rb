@@ -35,6 +35,7 @@ module Xeroizer
     report :BudgetSummary
     report :ExecutiveSummary
     report :ProfitAndLoss
+    report :TenNinetyNine
     report :TrialBalance
     
     public

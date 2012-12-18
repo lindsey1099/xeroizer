@@ -43,6 +43,27 @@ module Xeroizer
       validates_presence_of :name
       validates_inclusion_of :contact_status, :in => CONTACT_STATUS.keys, :allow_blanks => true
       
+      decimal   :box1
+      decimal   :box2
+      decimal   :box3
+      decimal   :box4
+      decimal   :box5
+      decimal   :box6
+      decimal   :box7
+      decimal   :box8
+      decimal   :box9
+      decimal   :box10
+      decimal   :box11
+      decimal   :box13
+      decimal   :box14
+      string    :federal_tax_id_type
+      string    :tax_id
+      string    :email
+      string    :city
+      string    :state
+      string    :zip
+      string    :street_address
+
     end
     
   end
