@@ -28,6 +28,8 @@ module Xeroizer
       string    :registration_number
       datetime  :created_date_utc, :api_name => 'CreatedDateUTC'
 
+      has_many  :addresses, :list_complete => true
+      has_many  :phones, :list_complete => true
     end
     
   end
