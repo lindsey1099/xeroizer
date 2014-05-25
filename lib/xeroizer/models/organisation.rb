@@ -13,6 +13,7 @@ module Xeroizer
       string    :api_key, :api_name => 'APIKey'
       string    :name
       string    :legal_name
+      string    :short_code
       boolean   :pays_tax
       string    :version
       string    :organisation_type
@@ -30,6 +31,7 @@ module Xeroizer
 
       has_many  :addresses, :list_complete => true
       has_many  :phones, :list_complete => true
+
     end
     
   end

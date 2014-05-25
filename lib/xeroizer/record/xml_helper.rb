@@ -1,3 +1,5 @@
+require 'active_support/time'
+
 module Xeroizer
   module Record
     module XmlHelper
@@ -23,6 +25,7 @@ module Xeroizer
                 when :decimal     then BigDecimal.new(element.text)
                 when :date        then Date.parse(element.text)
                 when :datetime    then Time.parse(element.text)
+                when :datetime_utc then ActiveSupport::TimeZone['UTC'].parse(element.text).utc.round(3)
                 when :belongs_to  
                   model_name = field[:model_name] ? field[:model_name].to_sym : element.name.to_sym
                   Xeroizer::Record.const_get(model_name).build_from_node(element, parent)
@@ -44,7 +47,8 @@ module Xeroizer
               end
             end
           end
-          
+
+          parent.mark_clean(record)
           record
         end
         
@@ -57,7 +61,7 @@ module Xeroizer
           # Turn a record into its XML representation.
           def to_xml(b = Builder::XmlMarkup.new(:indent => 2))
             optional_root_tag(parent.class.optional_xml_root_name, b) do |b|
-              b.tag!(parent.class.xml_node_name || parent.model_name) { 
+              b.tag!(model.class.xml_node_name || model.model_name) {
                 attributes.each do | key, value |
                   field = self.class.fields[key]
                   value = self.send(key) if field[:calculated]
@@ -84,7 +88,7 @@ module Xeroizer
             end
           end
         
-          # Format a attribute for use in the XML passed to Xero.
+          # Format an attribute for use in the XML passed to Xero.
           def xml_value_from_field(b, field, value)
             case field[:type]
               when :guid        then b.tag!(field[:api_name], value)

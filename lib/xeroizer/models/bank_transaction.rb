@@ -8,20 +8,32 @@ module Xeroizer
     end
 
     class BankTransaction < Base
+
+      BANK_TRANSACTION_STATUS = {
+        'ACTIVE'  =>          'Active bank transactions',
+        'DELETED' =>          'Deleted bank transactions',
+      } unless defined?(BANK_TRANSACTION_STATUS)
+      BANK_TRANSACTION_STATUSES = BANK_TRANSACTION_STATUS.keys.sort
+
+
       def initialize(parent)
         super parent
         self.line_amount_types = "Exclusive"
       end
 
       set_primary_key :bank_transaction_id
+      list_contains_summary_only true
+
       string :type
       date :date
 
-      date :updated_date_utc, :api_name => "UpdatedDateUTC"
-      date :fully_paid_on_date
-      string :reference
-      string :bank_transaction_id, :api_name => "BankTransactionID"
-      boolean :is_reconciled
+      datetime_utc  :updated_date_utc, :api_name => "UpdatedDateUTC"
+      date          :fully_paid_on_date
+      string        :url
+      string        :reference
+      string        :bank_transaction_id, :api_name => "BankTransactionID"
+      boolean       :is_reconciled
+      string        :status
 
       alias_method :reconciled?, :is_reconciled
 
@@ -34,8 +46,9 @@ module Xeroizer
         :in => Xeroizer::Record::LINE_AMOUNT_TYPES, :allow_blanks => false
 
       validates_inclusion_of :type,
-        :in => %w{SPEND RECEIVE}, :allow_blanks => false,
-        :message => "Invalid type. Expected either SPEND or RECEIVE."
+        :in => %w{SPEND RECEIVE RECEIVE-PREPAYMENT RECEIVE-OVERPAYMENT}, :allow_blanks => false,
+        :message => "Invalid type. Expected either SPEND, RECEIVE, RECEIVE-PREPAYMENT or RECEIVE-OVERPAYMENT."
+      validates_inclusion_of :status, :in => BANK_TRANSACTION_STATUSES, :unless => :new_record?
 
       validates_presence_of :contact, :bank_account, :allow_blanks => false
 

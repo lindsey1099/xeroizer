@@ -17,7 +17,8 @@ module Xeroizer
           def parse_params(options)
             params = {}
             params[:ModifiedAfter]  = options[:modified_since] if options[:modified_since]          
-            params[:OrderBy]        = options[:order] if options[:order]
+            params[:order]        = options[:order] if options[:order]
+
             if options[:where]
               params[:where] =  case options[:where]
                                   when String   then options[:where] 
@@ -25,6 +26,7 @@ module Xeroizer
                                 end
             end
             params[:offset] = options[:offset] if options[:offset]
+            params[:page] = options[:page] if options[:page]
             params
           end
         

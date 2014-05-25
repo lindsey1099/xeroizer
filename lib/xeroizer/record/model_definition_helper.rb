@@ -42,6 +42,7 @@ module Xeroizer
         def decimal(field_name, options = {});    define_simple_attribute(field_name, :decimal, options, 0.0); end
         def date(field_name, options = {});       define_simple_attribute(field_name, :date, options); end
         def datetime(field_name, options = {});   define_simple_attribute(field_name, :datetime, options); end
+        def datetime_utc(field_name, options = {});   define_simple_attribute(field_name, :datetime_utc, options); end
         
         def guid(field_name, options = {})
           # Ensure all automated Id conversions are changed to ID.
@@ -72,6 +73,7 @@ module Xeroizer
           
           unless options[:skip_writer]
             define_method "#{internal_field_name}=".to_sym do | value | 
+              parent.mark_dirty(self) if parent
               @attributes[field_name] = value
             end
           end
@@ -88,6 +90,7 @@ module Xeroizer
 
         # Sets the value of the Xero primary key for this record if it exists.
         def id=(new_id)
+          parent.mark_dirty(self) if parent
           self[self.class.primary_key_name] = new_id
         end
         

@@ -41,18 +41,6 @@ class InvoiceTest < Test::Unit::TestCase
   
   context "invoice totals" do
     
-    should "raise error when trying to set totals directly" do
-      assert_raises Xeroizer::SettingTotalDirectlyNotSupported do
-        @invoice.sub_total = 100.0
-      end
-      assert_raises Xeroizer::SettingTotalDirectlyNotSupported do
-        @invoice.total_tax = 100.0
-      end
-      assert_raises Xeroizer::SettingTotalDirectlyNotSupported do
-        @invoice.total = 100.0
-      end
-    end
-        
     should "large-scale testing from API XML" do
       invoices = @client.Invoice.all
       invoices.each do | invoice |
@@ -108,5 +96,18 @@ class InvoiceTest < Test::Unit::TestCase
     end
     
   end
+
+  context "updated date" do
+    should "get the updated date as utc" do
+      invoices = @client.Invoice.all
+      
+      assert_equal(Time.parse("2008-9-16T10:28:51.5Z"), invoices[0].updated_date_utc)
+
+      invoices.each do |invoice|
+        assert invoice.updated_date_utc.utc?, "updated_date_utc should be utc"
+      end
+    end
+  end
+
 
 end
