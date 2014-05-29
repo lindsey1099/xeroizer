@@ -17,7 +17,7 @@ GEM
       multi_json (~> 1.0)
     ansi (1.4.3)
     builder (3.2.2)
-    i18n (0.6.10)
+    i18n (0.6.9)
     metaclass (0.0.4)
     mime-types (2.3)
     mini_portile (0.6.0)
